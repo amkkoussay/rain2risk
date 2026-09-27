@@ -1,55 +1,20 @@
 # Rain2Risk
 
-## A simple flood-risk map
+## What is it?
 
-Rain2Risk is a small web app. It gives a quick flood-risk score for a place on the map.
+Rain2Risk is a small web app for quick flood-risk checks.
 
-The user clicks a place. The app gets weather and map data. It then shows a score from **0 to 100** and colors the map cells.
+Choose a place on the map. The app gets rain, height, land, and water data. It then gives a simple score from **0 to 100** and colors the map cells.
+
+## Why this project?
+
+I built Rain2Risk to learn how to join live data from many sources into one clear result. It is an **applied data engineering project**: it has an API, live data calls, map data, a simple risk model, tests, and proof files.
+
+The goal is not to give a perfect flood forecast. The goal is to show a clear and honest data flow from raw data to a useful map.
 
 > **Important:** Rain2Risk is only a screening tool. It is not an official flood warning system. Do not use it for safety or emergency decisions.
 
-## See the app
-
-### Desktop
-
-![Rain2Risk desktop screen](docs/screenshots/rain2risk-desktop.png)
-
-### Mobile
-
-![Rain2Risk mobile screen](docs/screenshots/rain2risk-mobile.png)
-
-### Live result
-
-![Rain2Risk live Tokyo result](docs/screenshots/live-tokyo-result.webp)
-
-## Proof: tested with real data
-
-The app was tested with live weather and map services. This is not only a local demo.
-
-- **5 cities passed the live smoke test:** Tunis, Tokyo, New York, Dhaka, and Amsterdam.
-- Each city returned **80 map cells**.
-- Weather, height, land cover, and OpenStreetMap data were available in the recorded run.
-- A separate browser run for Tokyo showed **41.8 mm of rain in 6 hours** and a **76/100** score.
-
-Read the proof files:
-
-- [Delivery notes and Tokyo live result](docs/DELIVERY.md)
-- [Runtime proof: server, UI, and offline checks](docs/runtime-proof.json)
-- [Live smoke results for 5 cities](docs/global-smoke-results.jsonl)
-- [Live smoke test script](scripts/global_smoke_test.py)
-- [WorldCover data check](docs/worldcover-sanity-results.jsonl)
-
-### Live smoke test result
-
-| City | Result | Map cells | Main data sources |
-|---|---:|---:|---|
-| Tunis | PASS | 80 | Weather, height, land cover, OSM |
-| Tokyo | PASS | 80 | Weather, height, land cover, OSM |
-| New York | PASS | 80 | Weather, height, land cover, OSM |
-| Dhaka | PASS | 80 | Weather, height, land cover, OSM |
-| Amsterdam | PASS | 80 | Weather, height, land cover, OSM |
-
-## How it works
+## How does it work?
 
 ```text
 Choose a place on the map
@@ -63,34 +28,76 @@ Make a simple risk score
 Show the score and map cells
 ```
 
-![Rain2Risk architecture](docs/architecture-clean.png)
+Main data sources:
 
-See the full flow in the [analysis flow diagram](docs/analysis-workflow.png).
-
-## Data used
-
-| Source | What it gives |
-|---|---|
-| [OpenWeather](https://openweathermap.org/api) | Rain and weather forecast |
-| [Open-Meteo](https://open-meteo.com/) | Height above sea level |
-| [ESA WorldCover](https://esa-worldcover.org/) | Land cover data |
-| [OpenStreetMap / Overpass](https://overpass-api.de/) | Buildings, water, and land use |
+- [OpenWeather](https://openweathermap.org/api) for rain and weather.
+- [Open-Meteo](https://open-meteo.com/) for height above sea level.
+- [ESA WorldCover](https://esa-worldcover.org/) for land cover.
+- [OpenStreetMap / Overpass](https://overpass-api.de/) for buildings, water, and land use.
 
 If a source is not available, the app says so. It does not make up data.
 
-## Main parts
+## Live demo
+
+The project has a local browser demo. These images show the real interface:
+
+![Rain2Risk desktop screen](docs/screenshots/rain2risk-desktop.png)
+
+- [Mobile screen](docs/screenshots/rain2risk-mobile.png)
+- [Live Tokyo result](docs/screenshots/live-tokyo-result.webp)
+
+## Architecture
+
+![Rain2Risk architecture](docs/architecture-clean.png)
+
+The full flow is in the [analysis flow diagram](docs/analysis-workflow.png). The editable Mermaid files are in `docs/`.
+
+Main parts:
 
 ```text
 backend/       Python server and risk code
 frontend/      Map page, JavaScript, and CSS
 data/          Small sample data files
-docs/           Images, diagrams, and project notes
+docs/          Images, diagrams, proof, and notes
 scripts/       Test and helper scripts
 tests/         Offline tests
-legacy/        Old code kept for reference
 ```
 
-The live app uses the code in `backend/` and `frontend/`. The `legacy/` folder is not used by the live app.
+## Evidence: tested with real data
+
+This was tested with live weather and map services. It is not only a local demo.
+
+- **5 cities passed the live smoke test:** Tunis, Tokyo, New York, Dhaka, and Amsterdam.
+- Each city returned **80 map cells**.
+- Weather, height, land cover, and OpenStreetMap data were available in the recorded run.
+- A separate browser run for Tokyo showed **41.8 mm of rain in 6 hours** and a **76/100** score.
+
+| City | Result | Map cells | Data sources |
+|---|---:|---:|---|
+| Tunis | PASS | 80 | Weather, height, land cover, OSM |
+| Tokyo | PASS | 80 | Weather, height, land cover, OSM |
+| New York | PASS | 80 | Weather, height, land cover, OSM |
+| Dhaka | PASS | 80 | Weather, height, land cover, OSM |
+| Amsterdam | PASS | 80 | Weather, height, land cover, OSM |
+
+Read the proof files:
+
+- [Delivery notes and Tokyo live result](docs/DELIVERY.md)
+- [Runtime proof](docs/runtime-proof.json)
+- [Live smoke results for 5 cities](docs/global-smoke-results.jsonl)
+- [Live smoke test script](scripts/global_smoke_test.py)
+- [WorldCover data check](docs/worldcover-sanity-results.jsonl)
+
+## Limitations
+
+- The score is a simple estimate.
+- It is not a water-depth model.
+- It is not a flood warning.
+- Rain data comes from a forecast for the chosen place. It is not measured for every map cell.
+- Results can change when a data source is slow, missing, or has low coverage.
+- The old event data has no exact point for each flood event, so the project does not claim an accuracy score from that data.
+
+See the [validation report](docs/validation/validation_report.md), [validation metrics](docs/validation/metrics.json), and [source notes](docs/validation/source_notes.md).
 
 ## Run it on your computer
 
@@ -159,7 +166,7 @@ Example body:
 
 The answer includes the place, weather, map cells, risk score, data sources, and data quality.
 
-## Test the project
+## Tests
 
 Run all normal checks from the project folder:
 
@@ -181,39 +188,21 @@ python scripts/global_smoke_test.py
 
 The recorded live results are in [global-smoke-results.jsonl](docs/global-smoke-results.jsonl).
 
-## Validation notes
+## Old code
 
-The old event data does not have exact points for each flood event. Because of this, the project does not claim an accuracy score from the old data.
+The old prototype is not in the main branch. It is kept in the [legacy-archive branch](https://github.com/amkkoussay/rain2risk/tree/legacy-archive) so the main project stays easy to read.
 
-This is kept clear in the validation files:
+The main branch contains the active app, its proof files, and the useful validation notes in `docs/validation/`.
 
-- [Validation report](legacy/validation/report/validation_report.md)
-- [Validation metrics](legacy/validation/results/metrics.json)
-- [Validation source notes](legacy/validation_source_notes.md)
+## More project files
 
-The data is ready for a later test with exact points or station data.
-
-## Project notes and images
-
-The `docs/` folder has the full project record:
-
+- [Operations guide](docs/OPERATIONS.md)
 - [Delivery notes](docs/DELIVERY.md)
 - [Runtime proof](docs/runtime-proof.json)
-- [Operations guide](docs/OPERATIONS.md)
-- [Architecture diagram](docs/architecture-clean.png)
-- [Analysis flow](docs/analysis-workflow.png)
 - [Project roadmap](docs/project-roadmap.png)
 - [All screen images](docs/screenshots/)
 - [Data source notes](docs/global-data-sources.md)
 - [Visual review](docs/visual-review.md)
-
-## Limits
-
-- The score is a simple estimate.
-- It is not a water-depth model.
-- It is not a flood warning.
-- Rain data comes from a forecast for the chosen place. It is not measured for every map cell.
-- Results can change when a data source is slow, missing, or has low coverage.
 
 ## License
 
