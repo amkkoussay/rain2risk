@@ -22,6 +22,33 @@ The user clicks a place. The app gets weather and map data. It then shows a scor
 
 ![Rain2Risk live Tokyo result](docs/screenshots/live-tokyo-result.webp)
 
+## Proof: tested with real data
+
+The app was tested with live weather and map services. This is not only a local demo.
+
+- **5 cities passed the live smoke test:** Tunis, Tokyo, New York, Dhaka, and Amsterdam.
+- Each city returned **80 map cells**.
+- Weather, height, land cover, and OpenStreetMap data were available in the recorded run.
+- A separate browser run for Tokyo showed **41.8 mm of rain in 6 hours** and a **76/100** score.
+
+Read the proof files:
+
+- [Delivery notes and Tokyo live result](docs/DELIVERY.md)
+- [Runtime proof: server, UI, and offline checks](docs/runtime-proof.json)
+- [Live smoke results for 5 cities](docs/global-smoke-results.jsonl)
+- [Live smoke test script](scripts/global_smoke_test.py)
+- [WorldCover data check](docs/worldcover-sanity-results.jsonl)
+
+### Live smoke test result
+
+| City | Result | Map cells | Main data sources |
+|---|---:|---:|---|
+| Tunis | PASS | 80 | Weather, height, land cover, OSM |
+| Tokyo | PASS | 80 | Weather, height, land cover, OSM |
+| New York | PASS | 80 | Weather, height, land cover, OSM |
+| Dhaka | PASS | 80 | Weather, height, land cover, OSM |
+| Amsterdam | PASS | 80 | Weather, height, land cover, OSM |
+
 ## How it works
 
 ```text
@@ -37,6 +64,8 @@ Show the score and map cells
 ```
 
 ![Rain2Risk architecture](docs/architecture-clean.png)
+
+See the full flow in the [analysis flow diagram](docs/analysis-workflow.png).
 
 ## Data used
 
@@ -138,11 +167,11 @@ Run all normal checks from the project folder:
 python scripts/verify_project.py
 ```
 
-This runs:
+The current check has:
 
-- Python compile check
-- Offline Python tests
-- JavaScript syntax check
+- Python compile check: **PASS**
+- Offline Python tests: **19 tests, PASS**
+- JavaScript syntax check: **PASS**
 
 The live test needs an OpenWeather key and network access:
 
@@ -150,12 +179,27 @@ The live test needs an OpenWeather key and network access:
 python scripts/global_smoke_test.py
 ```
 
+The recorded live results are in [global-smoke-results.jsonl](docs/global-smoke-results.jsonl).
+
+## Validation notes
+
+The old event data does not have exact points for each flood event. Because of this, the project does not claim an accuracy score from the old data.
+
+This is kept clear in the validation files:
+
+- [Validation report](legacy/validation/report/validation_report.md)
+- [Validation metrics](legacy/validation/results/metrics.json)
+- [Validation source notes](legacy/validation_source_notes.md)
+
+The data is ready for a later test with exact points or station data.
+
 ## Project notes and images
 
 The `docs/` folder has the full project record:
 
-- [Operations guide](docs/OPERATIONS.md)
 - [Delivery notes](docs/DELIVERY.md)
+- [Runtime proof](docs/runtime-proof.json)
+- [Operations guide](docs/OPERATIONS.md)
 - [Architecture diagram](docs/architecture-clean.png)
 - [Analysis flow](docs/analysis-workflow.png)
 - [Project roadmap](docs/project-roadmap.png)
@@ -173,4 +217,6 @@ The `docs/` folder has the full project record:
 
 ## License
 
-No license file has been added yet. Please add a license before using this code in a larger project.
+This project is released under the [MIT License](LICENSE).
+
+Copyright (c) 2026 Koussay Mehdouani.

@@ -23,7 +23,7 @@ See:
 The final offline verification suite completed successfully:
 
 - Python compilation: PASS
-- Offline unit tests: PASS, 20 tests
+- Offline unit tests: PASS, 19 tests
 - JavaScript syntax check: PASS
 
 The private `.env` file is intentionally excluded from the delivery archive. Configure `OPENWEATHER_API_KEY` locally before running provider-backed analysis.
