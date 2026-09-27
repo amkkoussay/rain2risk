@@ -1,0 +1,13 @@
+flowchart TD
+    P1[1 Foundation] --> P2[2 Weather]
+    P2 --> P3[3 Real GIS data]
+    P3 --> P4[4 Risk Engine]
+    P4 --> P5[5 Interactive Map]
+    P5 --> P65[6.5 Data Integrity]
+    P65 --> F1[Next: Event polygons]
+    F1 --> F2[Next: Gauge linked rainfall]
+    F2 --> F3[Next: R spatial validation]
+    F3 --> F4[Later: Calibration]
+    F4 --> F5[Only if data supports it: ML or GeoAI]
+    style P65 fill:#f5c542,stroke:#8b6508,stroke-width:2px
+    style F5 fill:#d9d9d9,stroke:#555,stroke-dasharray: 5 5

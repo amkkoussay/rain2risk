@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071522" />
+  <title>Rain2Risk | Global flood-risk screening</title>
+  <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Rain2Risk home">
+      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span><strong>Rain2Risk</strong><small>GLOBAL SCREENING</small></span>
+    </a>
+    <div class="topbar-meta"><span class="live-dot"></span><span>Live data workflow</span><span class="version">MVP</span></div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Location intelligence for rainfall risk</p>
+        <h1>See the rain.<br /><em>Understand the risk.</em></h1>
+        <p class="intro-copy">Select any location to build a local risk snapshot from weather, terrain, land cover, and OpenStreetMap context.</p>
+      </div>
+      <div class="workflow-chip" aria-label="Workflow summary"><span class="chip-icon">↗</span><span><b>One location</b><small>Four live layers</small></span></div>
+    </section>
+
+    <section class="map-card">
+      <div class="map-toolbar"><div><span class="toolbar-label">Explore the map</span><span class="toolbar-hint">Click to place an analysis point</span></div><span class="map-status"><i></i> Ready</span></div>
+      <div class="map-wrap"><div id="map" aria-label="Interactive global risk map"></div><div id="map-message" class="map-message" role="status">Click anywhere on the map to select a location.</div><div class="map-crosshair" aria-hidden="true">+</div></div>
+    </section>
+
+    <section class="control-panel">
+      <div class="panel-heading">
+        <div><p class="eyebrow">Analysis point</p><p id="selected-coordinates">20.00000, 0.00000</p></div>
+        <button id="my-location" class="secondary" type="button"><span class="button-icon">◎</span> Use my location</button>
+      </div>
+      <button id="analyze-location" class="primary" type="button"><span class="button-label">Analyze this location</span><span class="button-loader" aria-hidden="true"></span><span class="button-arrow" aria-hidden="true">→</span></button>
+      <p id="analysis-message" class="status-detail">Choose a place on the map, then start an analysis.</p>
+    </section>
+
+    <section class="sources-panel"><div class="section-heading"><div><p class="eyebrow">What powers the snapshot</p><h2>Four live data layers</h2></div><span class="data-badge">No invented values</span></div><div class="source-grid"><span><i class="source-icon weather-icon">◒</i><span><small>WEATHER</small><strong>OpenWeather</strong></span></span><span><i class="source-icon terrain-icon">⌁</i><span><small>TERRAIN</small><strong>Open-Meteo elevation</strong></span></span><span><i class="source-icon cover-icon">▦</i><span><small>LAND COVER</small><strong>ESA WorldCover</strong></span></span><span><i class="source-icon osm-icon">⌖</i><span><small>LOCAL CONTEXT</small><strong>OpenStreetMap</strong></span></span></div></section>
+
+    <section id="result-panel" class="result-panel" hidden>
+      <div class="result-heading"><div><p class="eyebrow">Analysis complete</p><h2>Your local risk snapshot</h2></div><span class="result-state"><i></i> <span id="quality-badge">Data quality: —</span></span></div>
+      <div class="selected-cell-card"><span>📍 Selected cell</span><strong id="selected-cell-id">—</strong><small id="selected-cell-risk">Risk for this cell: —</small></div><div class="risk-hero"><div class="risk-score-wrap"><strong id="risk-score">0</strong><span>/ 100</span></div><div class="risk-copy"><span class="risk-label">SCREENING LEVEL</span><b id="risk-level">LOW</b><p>Based on available rainfall and geographic factors.</p></div></div>
+      <div class="metric-grid"><p><span>Rainfall <small>next 6 hours</small></span><strong id="rainfall"></strong></p><p><span>Elevation <small>metres</small></span><strong id="elevation"></strong></p><p><span>Slope <small>terrain angle</small></span><strong id="slope"></strong></p><p><span>Built-up <small>urban surface</small></span><strong id="built-up"></strong></p><p><span>Water distance <small>nearest context</small></span><strong id="water-distance"></strong></p><p><span>Land cover <small>dominant class</small></span><strong id="land-cover"></strong></p></div>
+      <div class="data-quality"><h2>Data quality</h2><p id="quality-summary">—</p><div id="quality-details"></div></div><div class="contributors"><h2>Main contributors</h2><p id="contributors"></p></div><div class="explanation"><h2>Why this result?</h2><ul id="explanation"></ul></div>
+      <p class="disclaimer"><strong>Screening note</strong> Rain2Risk is an experimental relative-risk screening tool, not an official flood warning, precise flood prediction, or emergency forecast. Rainfall is a regional reference input; grid differences come from geographic factors.</p>
+    </section>
+  </main>
+  <footer><span>Rain2Risk</span><span>Transparent by design · Explore responsibly</span></footer>
+  <div class="legend"><strong>Risk level</strong><span><i class="swatch low"></i> LOW</span><span><i class="swatch moderate"></i> MODERATE</span><span><i class="swatch high"></i> HIGH</span><span><i class="swatch very-high"></i> VERY HIGH</span></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

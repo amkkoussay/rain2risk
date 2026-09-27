@@ -1,0 +1,27 @@
+flowchart LR
+    U[User selects a location] --> F[Leaflet frontend]
+    F -->|POST /api/analyze| A[Analysis API]
+    A --> W[OpenWeather\nforecast]
+    A --> G[GIS orchestration]
+    G --> D[Open-Meteo\nelevation / DEM]
+    G --> C[ESA WorldCover\nland cover]
+    G --> O[OpenStreetMap / Overpass\nlocal context]
+    W --> R[Risk engine]
+    D --> R
+    C --> R
+    O --> R
+    R --> J[GeoJSON + risk summary]
+    J --> F
+    F --> V[Leaflet grid\nscore + explanations]
+    H[GET /api/health] -.-> A
+    X[(data/cache/\nlocal provider cache)] -.-> G
+    classDef user fill:#0d2230,stroke:#78e1d3,color:#e8f3f2,stroke-width:2px;
+    classDef active fill:#102c3b,stroke:#6c9da5,color:#e8f3f2;
+    classDef provider fill:#173c4c,stroke:#f0a35b,color:#fff;
+    classDef output fill:#0b4c50,stroke:#78e1d3,color:#fff,stroke-width:2px;
+    classDef support fill:#162a37,stroke:#64838b,color:#b9d0d2;
+    class U,F,V user;
+    class A,G,R,J active;
+    class W,D,C,O provider;
+    class H,X support;
+    class J output;

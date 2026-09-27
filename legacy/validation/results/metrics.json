@@ -1,0 +1,5 @@
+{
+  "status": "no_point_validated_events",
+  "events": 0,
+  "reason": "All source events have regional descriptions rather than defensible point coordinates; no binary performance metrics were computed."
+}

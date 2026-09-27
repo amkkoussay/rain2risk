@@ -1,0 +1,28 @@
+sequenceDiagram
+    autonumber
+    actor User
+    participant UI as Leaflet UI
+    participant API as /api/analyze
+    participant Weather as OpenWeather
+    participant GIS as GIS orchestrator
+    participant DEM as Open-Meteo
+    participant Cover as ESA WorldCover
+    participant OSM as Overpass
+    participant Risk as Risk engine
+
+    User->>UI: Click map location
+    UI->>API: Send lat/lon JSON
+    API->>Weather: Request local forecast
+    Weather-->>API: Rainfall + current weather
+    API->>GIS: Build local grid
+    GIS->>DEM: Fetch elevations
+    DEM-->>GIS: Elevation samples
+    GIS->>Cover: Fetch land-cover tiles
+    Cover-->>GIS: Class fractions
+    GIS->>OSM: Query buildings/waterways/land use
+    OSM-->>GIS: Local feature facts
+    GIS-->>API: Enriched grid cells
+    API->>Risk: Calculate transparent heuristic score
+    Risk-->>API: Score, level, contributors
+    API-->>UI: GeoJSON + sources + data quality
+    UI-->>User: Colored grid and explanation

@@ -1,0 +1,22 @@
+flowchart TD
+    User[User selects any supported world location] --> Map[Leaflet world map]
+    Map --> Analyze[POST /api/analyze]
+    Analyze --> Weather[OpenWeather forecast]
+    Analyze --> DEM[Open-Meteo Elevation]
+    Analyze --> WorldCover[ESA WorldCover WMS]
+    Analyze --> OSM[OpenStreetMap Overpass]
+    Weather --> Features[Feature extraction]
+    DEM --> Features
+    WorldCover --> Features
+    OSM --> Features
+    Features --> Grid[Temporary local 8 x 10 grid]
+    Grid --> Risk[Transparent rule-based Risk Engine]
+    Risk --> GeoJSON[GeoJSON FeatureCollection]
+    GeoJSON --> Map
+    Cache[Local file cache] -. reduces repeat downloads .-> Weather
+    Cache -.-> DEM
+    Cache -.-> WorldCover
+    Cache -.-> OSM
+    style Analyze fill:#d8f3dc,stroke:#2d6a4f,stroke-width:2px
+    style Risk fill:#f5c542,stroke:#8b6508,stroke-width:2px
+    style GeoJSON fill:#cce5ff,stroke:#24527a,stroke-width:2px

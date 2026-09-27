@@ -1,0 +1,2 @@
+# Lightweight runtime support for global ESA WorldCover LERC tiles.
+lerc>=4.0

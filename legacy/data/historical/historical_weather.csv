@@ -1,0 +1,9 @@
+event_id,date,latitude,longitude,rain_1h,rain_3h,rain_6h,rain_24h,source,model,time_note
+TUN-1973-0330,1973-03-30,36.8065,10.1815,1.0,2.2,2.8,5.2,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-1989-0411,1989-04-11,36.8150,10.1800,2.8,5.4,6.2,8.1,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2003-0917,2003-09-17,36.8120,10.1750,3.7,9.4,16.5,36.2,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2007-1213,2007-12-13,36.8065,10.1815,0.5,1.3,2.3,3.8,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2011-1030,2011-10-30,36.8150,10.1750,6.1,18.2,34.2,47.3,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2017-0606,2017-06-06,36.8120,10.1750,1.9,2.6,2.6,5.2,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2019-0911,2019-09-11,36.8065,10.1815,0.0,0.0,0.0,0.0,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available
+TUN-2020-0910,2020-09-10,36.8150,10.1750,7.7,13.3,18.0,24.7,https://open-meteo.com/en/docs/historical-weather-api,ERA5,event-day hourly reanalysis; exact event hour was not available

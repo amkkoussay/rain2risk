@@ -1,0 +1,24 @@
+{
+  "server": {
+    "base_url": "http://127.0.0.1:8000",
+    "health": {
+      "status": "ok",
+      "service": "rain2risk"
+    },
+    "frontend_http_status": 200
+  },
+  "offline_checks": {
+    "python_compile": "PASS",
+    "unit_tests": "PASS",
+    "unit_test_count": 16,
+    "javascript_syntax": "PASS"
+  },
+  "visual_captures": [
+    "docs/screenshots/rain2risk-desktop.png",
+    "docs/screenshots/rain2risk-mobile.png"
+  ],
+  "live_provider_smoke_test": {
+    "status": "NOT_RUN",
+    "reason": "Requires network access and a configured OpenWeather API key; no live success is claimed here."
+  }
+}
