@@ -1,1 +1,1 @@
-{"functions":{"api/*.py":{"maxDuration":60}},"rewrites":[{"destination":"/frontend/app.js","source":"/app.js"},{"destination":"/frontend/style.css","source":"/style.css"},{"destination":"/frontend/index.html","source":"/"}]}
+{"functions":{"api/index.py":{"maxDuration":60}},"rewrites":[{"destination":"/api/index","source":"/api/health"},{"destination":"/api/index","source":"/api/analyze"}]}
