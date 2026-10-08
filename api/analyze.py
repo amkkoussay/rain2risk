@@ -2,6 +2,12 @@
 
 Wraps the existing backend analysis pipeline. Vercel's filesystem is
 read-only outside /tmp, so the on-disk GIS cache is redirected there.
+
+NOTE on imports: this file lives at api/analyze.py, which collides with the
+backend's own `api` package (backend/api/). To make `from api... import ...`
+resolve to the backend copy regardless of how the runtime imports this file,
+backend/ is placed first on sys.path and any pre-existing `api` bindings are
+dropped from sys.modules before importing.
 """
 
 import json
@@ -9,8 +15,15 @@ import sys
 from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 
-_BACKEND = Path(__file__).resolve().parent.parent / "backend"
-sys.path.insert(0, str(_BACKEND))
+_ROOT = Path(__file__).resolve().parent.parent
+_BACKEND = str(_ROOT / "backend")
+if _BACKEND not in sys.path:
+    sys.path.insert(0, _BACKEND)
+
+# Drop any `api` module bindings (e.g. this very file if the runtime imported
+# it as api.analyze) so the imports below resolve to backend/api/*.
+for _name in ("api.analyze", "api.health", "api"):
+    sys.modules.pop(_name, None)
 
 import geo.global_data as _global_data
 
