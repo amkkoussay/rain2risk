@@ -1,6 +1,6 @@
 "use strict";
 
-const RISK_LEVELS = { LOW: "#2eae62", MODERATE: "#e2bf3f", HIGH: "#e07a20", VERY_HIGH: "#c94343" };
+const RISK_LEVELS = { UNAVAILABLE: "#64748b", LOW: "#2eae62", MODERATE: "#e2bf3f", HIGH: "#e07a20", VERY_HIGH: "#c94343" };
 const STATUS_LABELS = { available: "Available", failed: "Failed", unavailable: "Unavailable", missing: "Missing", not_applicable: "Not applicable" };
 const map = L.map("map", { zoomControl: false }).setView([20, 0], 2);
 L.control.zoom({ position: "bottomleft" }).addTo(map);
@@ -101,7 +101,7 @@ async function analyzeLocation() {
     if (!selectedFeature) throw new Error("The selected cell is missing from the grid response.");
     const props = selectedFeature.properties;
 
-    document.querySelector("#risk-score").textContent = data.risk.score;
+    document.querySelector("#risk-score").textContent = data.risk.score == null ? "Unavailable" : data.risk.score;
     document.querySelector("#risk-level").textContent = data.risk.level;
     setRiskColor(data.risk.level);
 
@@ -118,7 +118,9 @@ async function analyzeLocation() {
     document.querySelector("#land-cover").textContent = display(props.land_cover_class);
 
     document.querySelector("#selected-cell-id").textContent = selectedId;
-    document.querySelector("#selected-cell-risk").textContent = `Risk for this cell: ${data.risk.level} · ${data.risk.score}/100`;
+    document.querySelector("#selected-cell-risk").textContent = data.risk.score == null
+      ? `Risk for this cell: unavailable (${data.risk.unavailable_factors?.length || 0} unavailable factors)`
+      : `Risk for this cell: ${data.risk.level} · ${data.risk.score}/100`;
 
     document.querySelector("#contributors").textContent =
       (data.risk.top_contributors || []).join(", ").replaceAll("_", " ") || "No contributors available";

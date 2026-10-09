@@ -48,6 +48,12 @@ class ApiContractTests(unittest.TestCase):
         self.assertEqual(status, 400)
         self.assertIn("error", body)
 
+
+    def test_non_finite_coordinates_are_rejected(self) -> None:
+        status, body = self.post({"lat": float("nan"), "lon": 20})
+        self.assertEqual(status, 400)
+        self.assertIn("error", body)
+
     @patch.object(main, "analyze", return_value={
         "location": {"lat": 10.0, "lon": 20.0},
         "weather": {},

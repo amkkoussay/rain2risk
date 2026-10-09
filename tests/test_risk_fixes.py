@@ -27,6 +27,27 @@ class RiskRepairTests(unittest.TestCase):
         self.assertEqual(result.factors["rainfall"].to_dict()["status"], "unavailable")
         self.assertEqual(result.factors["rainfall"].to_dict()["contribution"], None)
 
+
+    def test_weighted_score_stays_on_0_to_100_scale(self):
+        result = calculate_risk(
+            {"rainfall": {"next_6h_mm": 0, "coverage_hours": {"6h": 6}}},
+            {"elevation_m": 10, "slope_deg": 10, "built_up": 0, "water_distance_m": 2000,
+             "min_elevation_m": 0, "max_elevation_m": 20},
+        )
+        self.assertEqual(result.score, 7.5)
+        self.assertEqual(result.level, "LOW")
+        self.assertTrue(0 <= result.score <= 100)
+
+    def test_all_factors_unavailable_does_not_become_zero_risk(self):
+        result = calculate_risk(
+            {"rainfall": {"next_6h_mm": None, "coverage_hours": {"6h": 0}}},
+            {"elevation_m": None, "slope_deg": None, "built_up": None, "water_distance_m": None,
+             "min_elevation_m": None, "max_elevation_m": None},
+        )
+        self.assertIsNone(result.score)
+        self.assertEqual(result.level, "UNAVAILABLE")
+        self.assertIsNone(result.to_dict()["score"])
+
     @patch("api.analyze.get_weather", return_value={"rainfall": {"next_6h_mm": 42, "coverage_hours": {"6h": 6}, "status": "available"}})
     @patch("api.analyze.get_global_grid")
     def test_selected_cell_is_explicit_and_not_first_cell(self, grid_mock, weather_mock):

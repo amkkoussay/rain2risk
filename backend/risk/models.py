@@ -4,7 +4,7 @@ from typing import Any
 
 @dataclass(frozen=True)
 class FactorResult:
-    score: float
+    score: float | None
     weight: float
     contribution: float
     explanation: str
@@ -27,7 +27,7 @@ class FactorResult:
 
 @dataclass(frozen=True)
 class RiskResult:
-    score: float
+    score: float | None
     level: str
     factors: dict[str, FactorResult]
     top_contributors: list[str]
@@ -37,7 +37,7 @@ class RiskResult:
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "score": round(self.score),
+            "score": round(self.score) if self.score is not None else None,
             "level": self.level,
             "factors": {name: factor.to_dict() for name, factor in self.factors.items()},
             "top_contributors": self.top_contributors,

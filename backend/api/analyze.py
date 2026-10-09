@@ -1,5 +1,6 @@
 """Canonical analysis orchestration and API response contract."""
 from typing import Any
+from math import asin, cos, radians, sin, sqrt
 from api.weather import get_weather
 from weather.client import WeatherClientError
 from geo.global_data import get_global_grid
@@ -28,6 +29,14 @@ def _quality_summary(quality):
     else:
         overall = "unavailable"
     return {"status": overall, "providers": quality}
+
+def _distance_m(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """Great-circle distance between two WGS84 coordinates, in metres."""
+    dlat = radians(lat2 - lat1)
+    dlon = radians(lon2 - lon1)
+    a = sin(dlat / 2) ** 2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2) ** 2
+    return 6_371_000 * 2 * asin(sqrt(min(1.0, max(0.0, a))))
+
 
 def analyze(lat: float, lon: float) -> dict[str, Any]:
     grid_payload = get_global_grid(lat, lon)
@@ -97,7 +106,7 @@ def analyze(lat: float, lon: float) -> dict[str, Any]:
     selected_cell = {
         "cell_id": selected["cell_id"],
         "center": {"lat": selected["lat"], "lon": selected["lon"]},
-        "distance_to_requested_point_m": round(((selected["lat"]-lat)**2 + (selected["lon"]-lon)**2) ** 0.5 * 111320, 1),
+        "distance_to_requested_point_m": round(_distance_m(lat, lon, selected["lat"], selected["lon"]), 1),
         "risk_score": round(selected_result.score),
         "risk_level": selected_result.level,
     }

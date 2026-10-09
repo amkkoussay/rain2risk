@@ -12,7 +12,10 @@ def normalize_longitude(lon: float) -> float:
 
 
 def make_grid(lat: float, lon: float, rows: int = ROWS, cols: int = COLS, radius_deg: float = RADIUS_DEG) -> list[dict]:
-    lat = float(lat); lon = normalize_longitude(lon)
+    lat = float(lat); lon = float(lon)
+    if not math.isfinite(lat) or not math.isfinite(lon):
+        raise ValueError("latitude and longitude must be finite numbers")
+    lon = normalize_longitude(lon)
     if abs(lat) > MAX_LATITUDE:
         raise ValueError("latitude must be between -85 and 85 for the MVP")
     min_lat, max_lat = lat - radius_deg, lat + radius_deg

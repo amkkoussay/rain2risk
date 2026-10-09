@@ -1,5 +1,7 @@
 """Global provider orchestration with explicit data-quality states."""
 import json
+import os
+import tempfile
 from pathlib import Path
 from .dem import DEMError, derive_slopes, fetch_elevations
 from .features import build_features
@@ -22,9 +24,16 @@ def _cached(name, key, loader):
         try: return json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError): path.unlink(missing_ok=True)
     value = loader()
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(value), encoding="utf-8")
-    tmp.replace(path)
+    # A unique temporary file prevents concurrent requests for the same key
+    # from overwriting each other's in-progress cache writes.
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{key}.", suffix=".tmp", dir=folder)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(value, handle)
+        Path(tmp_name).replace(path)
+    except Exception:
+        Path(tmp_name).unlink(missing_ok=True)
+        raise
     return value
 
 def get_global_grid(lat, lon):

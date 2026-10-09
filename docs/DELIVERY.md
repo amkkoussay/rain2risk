@@ -23,7 +23,11 @@ See:
 The final offline verification suite completed successfully:
 
 - Python compilation: PASS
-- Offline unit tests: PASS, 19 tests
+- Offline unit tests: PASS, 20 tests
 - JavaScript syntax check: PASS
 
 The private `.env` file is intentionally excluded from the delivery archive. Configure `OPENWEATHER_API_KEY` locally before running provider-backed analysis.
+
+## Follow-up code scan
+
+See [`CODE_SCAN_AND_FIXES.md`](CODE_SCAN_AND_FIXES.md) for the follow-up source review, five fixes, regression tests, verification commands, and explicitly unverified limitations. The local `unittest` suite passes 22 tests; Python compilation and frontend JavaScript syntax checks pass.

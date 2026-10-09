@@ -1,6 +1,7 @@
 """Weather API handler and small in-memory cache."""
 
 import logging
+import math
 import time
 from typing import Any
 
@@ -13,9 +14,9 @@ _CACHE: dict[tuple[float, float], tuple[float, dict[str, Any]]] = {}
 
 
 def validate_coordinates(lat: float, lon: float) -> None:
-    if not -90 <= lat <= 90:
+    if not math.isfinite(lat) or not -90 <= lat <= 90:
         raise ValueError("lat must be between -90 and 90")
-    if not -180 <= lon <= 180:
+    if not math.isfinite(lon) or not -180 <= lon <= 180:
         raise ValueError("lon must be between -180 and 180")
 
 

@@ -1,211 +1,67 @@
 # Rain2Risk
 
-## What is it?
+**Live demo:** https://rain2risk-5naxo7otn-koussaymehdouani-4197s-projects.vercel.app/
 
-Rain2Risk is a small web app for quick flood-risk checks.
+Rain2Risk is a small web app. You pick a place on the map, and it shows a flood-risk score from 0 to 100 for that area.
 
-Choose a place on the map. The app gets rain, height, land, and water data. It then gives a simple score from **0 to 100** and colors the map cells.
+## How it works
 
-## Why this project?
+1. You click a place on the map.
+2. The app gets data from 4 sources: rain forecast (OpenWeather), land height (Open-Meteo), land cover (ESA WorldCover), and map data (OpenStreetMap).
+3. It mixes these into one risk score.
+4. You see a colored grid on the map.
 
-I built Rain2Risk to learn how to join live data from many sources into one clear result. It is an **applied data engineering project**: it has an API, live data calls, map data, a simple risk model, tests, and proof files.
+![Rain2Risk on desktop](docs/screenshots/rain2risk-desktop.png)
+![Rain2Risk on mobile](docs/screenshots/rain2risk-mobile.png)
 
-The goal is not to give a perfect flood forecast. The goal is to show a clear and honest data flow from raw data to a useful map.
+## What was broken and how I fixed it
 
-> **Important:** Rain2Risk is only a screening tool. It is not an official flood warning system. Do not use it for safety or emergency decisions.
+### Bug 1: Every place showed 100/100 risk
+**What broke:** The risk score was multiplied by 100 two times. So almost every place showed the maximum score, even with no rain.
+**How I fixed it:** Now the app divides the weighted score by the total weight, one time only. A test checks that zero rain never gives a very-high score.
 
-## How does it work?
+### Bug 2: Missing data looked like zero risk
+**What broke:** When no data was available, the app showed 0 — as if the place was safe. That was wrong and dangerous.
+**How I fixed it:** Now the app shows "UNAVAILABLE" instead of a number when there is no data.
 
-```text
-Choose a place on the map
-          ↓
-Send the place to the API
-          ↓
-Get weather and map data
-          ↓
-Make a simple risk score
-          ↓
-Show the score and map cells
-```
+### Bug 3: Bad coordinates were accepted
+**What broke:** Broken numbers like NaN could pass the location check.
+**How I fixed it:** The app now rejects any coordinate that is not a real, finite number.
 
-Main data sources:
+### Bug 4: Wrong distance numbers
+**What broke:** Distance was calculated with a simple flat-map formula. This is wrong because the Earth is round.
+**How I fixed it:** Now the app uses the haversine formula (correct distance on a sphere).
 
-- [OpenWeather](https://openweathermap.org/api) for rain and weather.
-- [Open-Meteo](https://open-meteo.com/) for height above sea level.
-- [ESA WorldCover](https://esa-worldcover.org/) for land cover.
-- [OpenStreetMap / Overpass](https://overpass-api.de/) for buildings, water, and land use.
+### Bug 5: Two users could break the cache
+**What broke:** When two people used the app at the same time, they could write to the same temporary file.
+**How I fixed it:** Each write now uses its own temporary file name.
 
-If a source is not available, the app says so. It does not make up data.
+## Why this approach
 
-## Live demo
+- **Honest numbers:** When data is missing, the app says "unavailable". It never invents numbers.
+- **Simple code:** The app uses only Python's standard library plus one small package. No Docker, no heavy tools.
+- **Clear limits:** This is a screening tool, not an official flood warning. It does not use machine learning.
 
-The project has a local browser demo. These images show the real interface:
+## How the data flows
 
-![Rain2Risk desktop screen](docs/screenshots/rain2risk-desktop.png)
+![How Rain2Risk works](docs/architecture-clean.png)
 
-- [Mobile screen](docs/screenshots/rain2risk-mobile.png)
-- [Live Tokyo result](docs/screenshots/live-tokyo-result.webp)
-
-## Architecture
-
-![Rain2Risk architecture](docs/architecture-clean.png)
-
-The full flow is in the [analysis flow diagram](docs/analysis-workflow.png). The editable Mermaid files are in `docs/`.
-
-Main parts:
-
-```text
-backend/       Python server and risk code
-frontend/      Map page, JavaScript, and CSS
-data/          Small sample data files
-docs/          Images, diagrams, proof, and notes
-scripts/       Test and helper scripts
-tests/         Offline tests
-```
-
-## Evidence: tested with real data
-
-This was tested with live weather and map services. It is not only a local demo.
-
-- **5 cities passed the live smoke test:** Tunis, Tokyo, New York, Dhaka, and Amsterdam.
-- Each city returned **80 map cells**.
-- Weather, height, land cover, and OpenStreetMap data were available in the recorded run.
-- A separate browser run for Tokyo showed **41.8 mm of rain in 6 hours** and a **76/100** score.
-
-| City | Result | Map cells | Data sources |
-|---|---:|---:|---|
-| Tunis | PASS | 80 | Weather, height, land cover, OSM |
-| Tokyo | PASS | 80 | Weather, height, land cover, OSM |
-| New York | PASS | 80 | Weather, height, land cover, OSM |
-| Dhaka | PASS | 80 | Weather, height, land cover, OSM |
-| Amsterdam | PASS | 80 | Weather, height, land cover, OSM |
-
-Read the proof files:
-
-- [Delivery notes and Tokyo live result](docs/DELIVERY.md)
-- [Runtime proof](docs/runtime-proof.json)
-- [Live smoke results for 5 cities](docs/global-smoke-results.jsonl)
-- [Live smoke test script](scripts/global_smoke_test.py)
-- [WorldCover data check](docs/worldcover-sanity-results.jsonl)
-
-## Limitations
-
-- The score is a simple estimate.
-- It is not a water-depth model.
-- It is not a flood warning.
-- Rain data comes from a forecast for the chosen place. It is not measured for every map cell.
-- Results can change when a data source is slow, missing, or has low coverage.
-- The old event data has no exact point for each flood event, so the project does not claim an accuracy score from that data.
-
-See the [validation report](docs/validation/validation_report.md), [validation metrics](docs/validation/metrics.json), and [source notes](docs/validation/source_notes.md).
-
-## Run it on your computer
-
-You need Python 3. You also need Node.js for one JavaScript check.
-
-### 1. Download the project
+## Try it yourself
 
 ```bash
-git clone https://github.com/amkkoussay/rain2risk.git
-cd rain2risk
-```
-
-### 2. Create a Python environment
-
-```bash
-python -m venv .venv
-. .venv/bin/activate
 pip install -r requirements.txt
-```
-
-### 3. Add your weather key
-
-Copy `.env.example` to `.env` and add your OpenWeather key:
-
-```dotenv
-OPENWEATHER_API_KEY=your-key-here
-APP_HOST=127.0.0.1
-APP_PORT=8000
-OPENWEATHER_TIMEOUT=10
-WEATHER_CACHE_TTL=300
-```
-
-Never put a real key in GitHub.
-
-### 4. Start the app
-
-```bash
 python backend/main.py
 ```
 
-Open this address in your browser:
+You need a free OpenWeather key for rain data. Add it like this:
 
-```text
-http://127.0.0.1:8000/
+```bash
+OPENWEATHER_API_KEY=your-key-here
 ```
+
+Then open http://127.0.0.1:8000/ in your browser.
 
 ## API
 
-### Check the server
-
-```text
-GET /api/health
-```
-
-### Analyze a place
-
-```text
-POST /api/analyze
-```
-
-Example body:
-
-```json
-{"lat": 36.8065, "lon": 10.1815}
-```
-
-The answer includes the place, weather, map cells, risk score, data sources, and data quality.
-
-## Tests
-
-Run all normal checks from the project folder:
-
-```bash
-python scripts/verify_project.py
-```
-
-The current check has:
-
-- Python compile check: **PASS**
-- Offline Python tests: **19 tests, PASS**
-- JavaScript syntax check: **PASS**
-
-The live test needs an OpenWeather key and network access:
-
-```bash
-python scripts/global_smoke_test.py
-```
-
-The recorded live results are in [global-smoke-results.jsonl](docs/global-smoke-results.jsonl).
-
-## Old code
-
-The old prototype is not in the main branch. It is kept in the [legacy-archive branch](https://github.com/amkkoussay/rain2risk/tree/legacy-archive) so the main project stays easy to read.
-
-The main branch contains the active app, its proof files, and the useful validation notes in `docs/validation/`.
-
-## More project files
-
-- [Operations guide](docs/OPERATIONS.md)
-- [Delivery notes](docs/DELIVERY.md)
-- [Runtime proof](docs/runtime-proof.json)
-- [Project roadmap](docs/project-roadmap.png)
-- [All screen images](docs/screenshots/)
-- [Data source notes](docs/global-data-sources.md)
-- [Visual review](docs/visual-review.md)
-
-## License
-
-This project is released under the [MIT License](LICENSE).
-
-Copyright (c) 2026 Koussay Mehdouani.
+- `POST /api/analyze` — send `{"lat": 36.8, "lon": 10.18}`, get back the risk score and the map grid.
+- `GET /api/health` — check that the app is running.

@@ -71,10 +71,10 @@ def calculate_risk(weather: dict[str, Any], geo_features: dict[str, Any]) -> Ris
                                      explanations[name], available, status, raw_values[name], units[name])
     available_names = [name for name, factor in factors.items() if factor.available]
     weight_sum = sum(WEIGHTS[name] for name in available_names)
-    total = max(0.0, min(100.0, sum(factors[n].contribution for n in available_names) * 100.0 / weight_sum)) if weight_sum else 0.0
+    total = max(0.0, min(100.0, sum(factors[n].contribution for n in available_names) / weight_sum)) if weight_sum else None
     ordered = sorted(available_names, key=lambda name: factors[name].contribution, reverse=True)
     explanation = [explanations[n] for n in ordered if factors[n].score >= 50][:3]
     if not explanation and ordered:
         explanation = [explanations[ordered[0]]]
     unavailable = [name for name, factor in factors.items() if not factor.available]
-    return RiskResult(total, _level(total), factors, ordered[:3], explanation, rainfall_window, unavailable)
+    return RiskResult(total, _level(total) if total is not None else "UNAVAILABLE", factors, ordered[:3], explanation, rainfall_window, unavailable)

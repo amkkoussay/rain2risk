@@ -2,6 +2,7 @@
 
 import json
 import logging
+import math
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -40,7 +41,7 @@ class Rain2RiskHandler(SimpleHTTPRequestHandler):
             length = int(self.headers.get("Content-Length", "0"))
             body = json.loads(self.rfile.read(length).decode("utf-8"))
             lat, lon = float(body["lat"]), float(body["lon"])
-            if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            if not (math.isfinite(lat) and math.isfinite(lon) and -90 <= lat <= 90 and -180 <= lon <= 180):
                 raise ValueError("latitude or longitude is outside valid range")
             self.send_json(200, analyze(lat, lon))
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
