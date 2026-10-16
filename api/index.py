@@ -90,7 +90,10 @@ class handler(BaseHTTPRequestHandler):
         elif path.startswith("/api/"):
             self._send_json(200, HEALTH_RESPONSE)
         else:
-            self._send_json(404, {"error": "not_found"})
+            # Serve any other real file under frontend/ (e.g. /assets/*.png).
+            # _send_file keeps the path-traversal guard and answers a JSON
+            # 404 when the path does not map to a file.
+            self._send_file(path.lstrip("/"))
 
     def do_POST(self) -> None:
         # Only /api/analyze rewrites POST here.
