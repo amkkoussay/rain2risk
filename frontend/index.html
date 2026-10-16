@@ -3,57 +3,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#071522" />
-  <title>Rain2Risk | Global flood-risk screening</title>
+  <meta name="theme-color" content="#F3EEE3" />
+  <meta name="description" content="Rain2Risk — location intelligence for rainfall risk. Four live data layers, one local risk snapshot. See the rain. Understand the risk." />
+  <title>Rain2Risk — See the rain. Understand the risk.</title>
+  <link rel="icon" type="image/png" href="/assets/favicon.png" />
   <link rel="preconnect" href="https://unpkg.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
   <header class="topbar">
     <a class="brand" href="/" aria-label="Rain2Risk home">
-      <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
-      <span><strong>Rain2Risk</strong><small>GLOBAL SCREENING</small></span>
+      <img class="brand-plate" src="/assets/logo-mark.png" alt="" width="44" height="44" />
+      <span class="brand-word">Rain2Risk<small>RAINFALL-RISK SCREENING</small></span>
     </a>
-    <div class="topbar-meta"><span class="live-dot"></span><span>Live data workflow</span><span class="version">MVP</span></div>
+    <div class="topbar-right">
+      <span class="live-pill"><i></i>Live data</span>
+      <a class="ghost-link" href="https://github.com/amkkoussay/rain2risk" target="_blank" rel="noopener">GitHub</a>
+    </div>
   </header>
 
   <main>
-    <section class="intro">
-      <div>
-        <p class="eyebrow">Location intelligence for rainfall risk</p>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">FIELD INSTRUMENT · FOUR LIVE LAYERS</p>
         <h1>See the rain.<br /><em>Understand the risk.</em></h1>
-        <p class="intro-copy">Select any location to build a local risk snapshot from weather, terrain, land cover, and OpenStreetMap context.</p>
+        <p class="lede">Rain2Risk reads rainfall, terrain, land cover and map context for any point on Earth, and sets down a single transparent score — a screening, not a warning. When data is missing it writes <i>unavailable</i>, never a guess.</p>
+        <div class="hero-meta">
+          <span><b>04</b><small>data layers</small></span>
+          <span><b>00</b><small>invented values</small></span>
+          <span><b>01</b><small>honest score</small></span>
+        </div>
       </div>
-      <div class="workflow-chip" aria-label="Workflow summary"><span class="chip-icon">↗</span><span><b>One location</b><small>Four live layers</small></span></div>
+      <figure class="plate-card" aria-label="The Rain2Risk mark">
+        <img src="/assets/logo-lockup.png" alt="Rain2Risk logo — a droplet of topographic contours over a risk grid" />
+        <figcaption><span>Fig. 01</span>The mark — rain, terrain, and the risk grid.</figcaption>
+      </figure>
+    </section>
+
+    <section class="layers-band" aria-label="The four data layers">
+      <div class="layer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 4v7M12 7v7M16 4v7M7 18h10"/></svg>
+        <span><b>Rainfall</b><small>OpenWeather · 6h</small></span>
+      </div>
+      <div class="layer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 10c3-3 6 2 9-1s6 2 9-1"/><path d="M3 15c3-3 6 2 9-1s6 2 9-1" opacity=".55"/><path d="M3 20c3-3 6 2 9-1s6 2 9-1" opacity=".3"/></svg>
+        <span><b>Terrain</b><small>Open-Meteo elevation</small></span>
+      </div>
+      <div class="layer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l8 4-8 4-8-4z"/><path d="M4 12l8 4 8-4"/><path d="M4 16l8 4 8-4" opacity=".55"/></svg>
+        <span><b>Land cover</b><small>ESA WorldCover</small></span>
+      </div>
+      <div class="layer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6.1-6-10.5a6 6 0 1 1 12 0C18 14.9 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
+        <span><b>Local context</b><small>OpenStreetMap</small></span>
+      </div>
     </section>
 
     <section class="map-card">
-      <div class="map-toolbar"><div><span class="toolbar-label">Explore the map</span><span class="toolbar-hint">Click to place an analysis point</span></div><span class="map-status"><i></i> Ready</span></div>
-      <div class="map-wrap"><div id="map" aria-label="Interactive global risk map"></div><div id="map-message" class="map-message" role="status">Click anywhere on the map to select a location.</div><div class="map-crosshair" aria-hidden="true">+</div></div>
+      <div class="map-toolbar">
+        <div><span class="toolbar-label">The chart</span><span class="toolbar-hint">Click to place an analysis point</span></div>
+        <span class="map-status"><i></i>Ready</span>
+      </div>
+      <div class="map-wrap">
+        <div id="map" aria-label="Interactive global risk map"></div>
+        <div id="map-message" class="map-message" role="status">Click anywhere on the map to select a location.</div>
+        <div class="map-crosshair" aria-hidden="true">+</div>
+      </div>
     </section>
 
     <section class="control-panel">
       <div class="panel-heading">
-        <div><p class="eyebrow">Analysis point</p><p id="selected-coordinates">20.00000, 0.00000</p></div>
-        <button id="my-location" class="secondary" type="button"><span class="button-icon">◎</span> Use my location</button>
+        <div>
+          <p class="eyebrow">Analysis point</p>
+          <p id="selected-coordinates">20.00000, 0.00000</p>
+        </div>
+        <button id="my-location" class="secondary" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          Use my location
+        </button>
       </div>
-      <button id="analyze-location" class="primary" type="button"><span class="button-label">Analyze this location</span><span class="button-loader" aria-hidden="true"></span><span class="button-arrow" aria-hidden="true">→</span></button>
+      <button id="analyze-location" class="primary" type="button">
+        <span class="button-label">Analyze this location</span>
+        <span class="button-loader" aria-hidden="true"></span>
+        <span class="button-arrow" aria-hidden="true">→</span>
+      </button>
       <p id="analysis-message" class="status-detail">Choose a place on the map, then start an analysis.</p>
     </section>
 
-    <section class="sources-panel"><div class="section-heading"><div><p class="eyebrow">What powers the snapshot</p><h2>Four live data layers</h2></div><span class="data-badge">No invented values</span></div><div class="source-grid"><span><i class="source-icon weather-icon">◒</i><span><small>WEATHER</small><strong>OpenWeather</strong></span></span><span><i class="source-icon terrain-icon">⌁</i><span><small>TERRAIN</small><strong>Open-Meteo elevation</strong></span></span><span><i class="source-icon cover-icon">▦</i><span><small>LAND COVER</small><strong>ESA WorldCover</strong></span></span><span><i class="source-icon osm-icon">⌖</i><span><small>LOCAL CONTEXT</small><strong>OpenStreetMap</strong></span></span></div></section>
-
     <section id="result-panel" class="result-panel" hidden>
-      <div class="result-heading"><div><p class="eyebrow">Analysis complete</p><h2>Your local risk snapshot</h2></div><span class="result-state"><i></i> <span id="quality-badge">Data quality: —</span></span></div>
-      <div class="selected-cell-card"><span>📍 Selected cell</span><strong id="selected-cell-id">—</strong><small id="selected-cell-risk">Risk for this cell: —</small></div><div class="risk-hero"><div class="risk-score-wrap"><strong id="risk-score">0</strong><span>/ 100</span></div><div class="risk-copy"><span class="risk-label">SCREENING LEVEL</span><b id="risk-level">LOW</b><p>Based on available rainfall and geographic factors.</p></div></div>
-      <div class="metric-grid"><p><span>Rainfall <small>next 6 hours</small></span><strong id="rainfall"></strong></p><p><span>Elevation <small>metres</small></span><strong id="elevation"></strong></p><p><span>Slope <small>terrain angle</small></span><strong id="slope"></strong></p><p><span>Built-up <small>urban surface</small></span><strong id="built-up"></strong></p><p><span>Water distance <small>nearest context</small></span><strong id="water-distance"></strong></p><p><span>Land cover <small>dominant class</small></span><strong id="land-cover"></strong></p></div>
-      <div class="data-quality"><h2>Data quality</h2><p id="quality-summary">—</p><div id="quality-details"></div></div><div class="contributors"><h2>Main contributors</h2><p id="contributors"></p></div><div class="explanation"><h2>Why this result?</h2><ul id="explanation"></ul></div>
-      <p class="disclaimer"><strong>Screening note</strong> Rain2Risk is an experimental relative-risk screening tool, not an official flood warning, precise flood prediction, or emergency forecast. Rainfall is a regional reference input; grid differences come from geographic factors.</p>
+      <div class="result-heading">
+        <div><p class="eyebrow">Reading Nº <span id="reading-no">001</span></p><h2>Local risk snapshot</h2></div>
+        <span class="result-state"><i></i><span id="quality-badge">Data quality: —</span></span>
+      </div>
+
+      <div class="selected-cell-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6.1-6-10.5a6 6 0 1 1 12 0C18 14.9 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
+        <span class="cell-label">Selected cell</span>
+        <strong id="selected-cell-id">—</strong>
+        <small id="selected-cell-risk">Risk for this cell: —</small>
+      </div>
+
+      <div class="risk-hero">
+        <div class="risk-score-wrap"><strong id="risk-score">0</strong><span>/ 100</span></div>
+        <div class="risk-copy">
+          <span class="risk-label">SCREENING LEVEL</span>
+          <b id="risk-level">LOW</b>
+          <p>A relative screening score from available rainfall and geographic factors — not a forecast.</p>
+        </div>
+      </div>
+      <div class="score-bar" aria-hidden="true"><i id="score-bar-fill"></i></div>
+
+      <div class="metric-grid">
+        <p><span>Rainfall <small>next 6 hours</small></span><strong id="rainfall">—</strong></p>
+        <p><span>Elevation <small>metres</small></span><strong id="elevation">—</strong></p>
+        <p><span>Slope <small>terrain angle</small></span><strong id="slope">—</strong></p>
+        <p><span>Built-up <small>urban surface</small></span><strong id="built-up">—</strong></p>
+        <p><span>Water distance <small>nearest context</small></span><strong id="water-distance">—</strong></p>
+        <p><span>Land cover <small>dominant class</small></span><strong id="land-cover">—</strong></p>
+      </div>
+
+      <div class="data-quality">
+        <h2>Data quality</h2>
+        <p id="quality-summary">—</p>
+        <div id="quality-details"></div>
+      </div>
+      <div class="contributors"><h2>Main contributors</h2><p id="contributors">—</p></div>
+      <div class="explanation"><h2>Why this result?</h2><ul id="explanation"></ul></div>
+
+      <p class="disclaimer"><strong>Screening note.</strong> Rain2Risk is an experimental relative-risk screening tool — not an official flood warning, precise flood prediction, or emergency forecast. Rainfall is a regional reference input; grid differences come from geographic factors.</p>
+    </section>
+
+    <section class="field-notes" aria-label="Field notes on honesty">
+      <div><span>NOTE 01</span><b>Unavailable means unavailable.</b><p>Missing layers are never written down as zero risk.</p></div>
+      <div><span>NOTE 02</span><b>A screening, not a warning.</b><p>For understanding and planning — never an emergency forecast.</p></div>
+      <div><span>NOTE 03</span><b>Every score shows its reasoning.</b><p>Contributors and data quality are recorded with each reading.</p></div>
     </section>
   </main>
-  <footer><span>Rain2Risk</span><span>Transparent by design · Explore responsibly</span></footer>
-  <div class="legend"><strong>Risk level</strong><span><i class="swatch low"></i> LOW</span><span><i class="swatch moderate"></i> MODERATE</span><span><i class="swatch high"></i> HIGH</span><span><i class="swatch very-high"></i> VERY HIGH</span></div>
+
+  <footer>
+    <a class="foot-brand" href="/" aria-label="Rain2Risk home">
+      <img src="/assets/logo-mark.png" alt="" width="26" height="26" />
+      <span>Rain2Risk</span>
+    </a>
+    <span class="foot-tag">Transparent by design · Explore responsibly</span>
+  </footer>
+
+  <div class="legend" aria-label="Risk level legend">
+    <strong>Risk level</strong>
+    <span><i class="swatch low"></i>LOW</span>
+    <span><i class="swatch moderate"></i>MODERATE</span>
+    <span><i class="swatch high"></i>HIGH</span>
+    <span><i class="swatch very-high"></i>VERY HIGH</span>
+    <span><i class="swatch na"></i>UNAVAILABLE</span>
+  </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/app.js"></script>
 </body>

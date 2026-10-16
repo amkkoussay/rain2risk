@@ -1,6 +1,15 @@
 "use strict";
 
-const RISK_LEVELS = { UNAVAILABLE: "#64748b", LOW: "#2eae62", MODERATE: "#e2bf3f", HIGH: "#e07a20", VERY_HIGH: "#c94343" };
+/* Rain2Risk brand risk scale — matches the design-system tokens in style.css */
+/* Rain2Risk risk scale — matches the design-system tokens in style.css */
+/* Rain2Risk risk scale — field-journal edition, matches style.css tokens */
+const RISK_LEVELS = {
+  UNAVAILABLE: "#8a938c",
+  LOW: "#2e9e6b",
+  MODERATE: "#c9a227",
+  HIGH: "#d97b2b",
+  VERY_HIGH: "#c23b2e"
+};
 const STATUS_LABELS = { available: "Available", failed: "Failed", unavailable: "Unavailable", missing: "Missing", not_applicable: "Not applicable" };
 const map = L.map("map", { zoomControl: false }).setView([20, 0], 2);
 L.control.zoom({ position: "bottomleft" }).addTo(map);
@@ -14,7 +23,7 @@ const percent = value =>
 const riskLayer = L.geoJSON(null, {
   style: feature => {
     const level = feature.properties.risk_level;
-    return { color: RISK_LEVELS[level] || "#64748b", weight: 1, fillColor: RISK_LEVELS[level] || "#64748b", fillOpacity: .52 };
+    return { color: RISK_LEVELS[level] || "#8a938c", weight: 1, fillColor: RISK_LEVELS[level] || "#8a938c", fillOpacity: .52 };
   },
   onEachFeature: (feature, layer) => {
     const p = feature.properties;
@@ -34,6 +43,7 @@ const riskLayer = L.geoJSON(null, {
 
 let marker;
 let selected = { lat: 20, lon: 0 };
+let readingNo = 0;
 
 function setSelected(lat, lon) {
   selected = { lat, lon };
@@ -47,8 +57,17 @@ function setMessage(text, isError = false) {
   document.querySelector("#map-message").textContent = text;
   document.querySelector("#map-message").classList.toggle("error", isError);
 }
-function setRiskColor(level) {
-  document.querySelector("#risk-level").style.background = RISK_LEVELS[level] || "#64748b";
+function setRiskColor(level, score) {
+  const color = RISK_LEVELS[level] || "#8a938c";
+  document.querySelector("#risk-level").style.background = color;
+  const bar = document.querySelector("#score-bar-fill");
+  if (bar) {
+    const pct = score === null || score === undefined || Number.isNaN(Number(score))
+      ? 0
+      : Math.max(0, Math.min(100, Number(score)));
+    bar.style.width = `${pct}%`;
+    bar.style.background = color;
+  }
 }
 function setLoading(isLoading) {
   const button = document.querySelector("#analyze-location");
@@ -103,7 +122,7 @@ async function analyzeLocation() {
 
     document.querySelector("#risk-score").textContent = data.risk.score == null ? "Unavailable" : data.risk.score;
     document.querySelector("#risk-level").textContent = data.risk.level;
-    setRiskColor(data.risk.level);
+    setRiskColor(data.risk.level, data.risk.score);
 
     const rainfall = data.weather?.rainfall || {};
     document.querySelector("#rainfall").textContent =
@@ -133,6 +152,8 @@ async function analyzeLocation() {
     }));
 
     setQuality(data.data_quality);
+    readingNo += 1;
+    document.querySelector("#reading-no").textContent = String(readingNo).padStart(3, "0");
     document.querySelector("#result-panel").hidden = false;
     setMessage(`Analysis complete · ${formatSources(data.sources)}`);
     document.querySelector("#result-panel").scrollIntoView({ behavior: "smooth", block: "start" });
