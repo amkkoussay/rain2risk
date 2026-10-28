@@ -18,19 +18,19 @@
 
 ---
 
-**Rain2Risk** is a field instrument for rainfall-risk screening. Select any point on Earth and it reads four live data layers into one transparent 0–100 score — a *screening*, not a warning. When data is missing, it writes **unavailable** instead of guessing. Never a forecast, never an emergency alert, and no machine learning.
+**Rain2Risk** is a field instrument for rainfall-risk screening. Select any point on Earth and it reads three live data layers into one transparent 0–100 score — a *screening*, not a warning. The fourth layer, land cover (ESA WorldCover), is currently unavailable in production and is shown as **unavailable** instead of guessed. Never a forecast, never an emergency alert, and no machine learning.
 
 ![Rain2Risk brand sheet](docs/brand-sheet.png)
 
-## The four layers
+## The layers
 
-Every score is built from the same four live sources — no invented values, ever.
+Every score is built from the live sources that respond — no invented values, ever.
 
 | Layer | Source | What it tells us |
 |---|---|---|
 | **Rainfall** | OpenWeather · next 6 hours | Regional reference input |
 | **Terrain** | Open-Meteo elevation | Height and slope of the land |
-| **Land cover** | ESA WorldCover | What the surface is made of |
+| **Land cover** | ESA WorldCover — currently unavailable in production | What the surface is made of (shown as unavailable, never guessed) |
 | **Local context** | OpenStreetMap | Buildings, water, urban surface nearby |
 
 ## The honesty rule
@@ -44,7 +44,7 @@ This is the core of the product, and of the brand:
 ## How it works
 
 1. Click a place on the map (or use your location).
-2. The app fetches the four layers for that point.
+2. The app fetches the available layers for that point.
 3. Terrain, cover and context are scored per map cell; rainfall acts as a regional reference.
 4. You get a colored risk grid, a 0–100 score for your cell, and the full reasoning behind it.
 

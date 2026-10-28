@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#F3EEE3" />
-  <meta name="description" content="Rain2Risk — location intelligence for rainfall risk. Four live data layers, one local risk snapshot. See the rain. Understand the risk." />
+  <meta name="description" content="Rain2Risk — location intelligence for rainfall risk. Three live data layers, one local risk snapshot. See the rain. Understand the risk." />
   <title>Rain2Risk — See the rain. Understand the risk.</title>
   <link rel="icon" type="image/png" href="/assets/favicon.png" />
   <link rel="preconnect" href="https://unpkg.com" />
@@ -29,11 +29,11 @@
   <main>
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">FIELD INSTRUMENT · FOUR LIVE LAYERS</p>
+        <p class="eyebrow">FIELD INSTRUMENT · THREE LIVE LAYERS</p>
         <h1>See the rain.<br /><em>Understand the risk.</em></h1>
-        <p class="lede">Rain2Risk reads rainfall, terrain, land cover and map context for any point on Earth, and sets down a single transparent score — a screening, not a warning. When data is missing it writes <i>unavailable</i>, never a guess.</p>
+        <p class="lede">Rain2Risk reads rainfall, terrain and map context for any point on Earth, and sets down a single transparent score — a screening, not a warning. Land cover (ESA WorldCover) is currently unavailable in production and is shown as <i>unavailable</i>, never a guess.</p>
         <div class="hero-meta">
-          <span><b>04</b><small>data layers</small></span>
+          <span><b>03</b><small>data layers</small></span>
           <span><b>00</b><small>invented values</small></span>
           <span><b>01</b><small>honest score</small></span>
         </div>
@@ -44,7 +44,7 @@
       </figure>
     </section>
 
-    <section class="layers-band" aria-label="The four data layers">
+    <section class="layers-band" aria-label="The data layers">
       <div class="layer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M8 4v7M12 7v7M16 4v7M7 18h10"/></svg>
         <span><b>Rainfall</b><small>OpenWeather · 6h</small></span>
@@ -55,7 +55,7 @@
       </div>
       <div class="layer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l8 4-8 4-8-4z"/><path d="M4 12l8 4 8-4"/><path d="M4 16l8 4 8-4" opacity=".55"/></svg>
-        <span><b>Land cover</b><small>ESA WorldCover</small></span>
+        <span><b>Land cover</b><small>ESA WorldCover · currently unavailable</small></span>
       </div>
       <div class="layer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6-6.1-6-10.5a6 6 0 1 1 12 0C18 14.9 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.2"/></svg>
