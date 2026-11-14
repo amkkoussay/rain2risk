@@ -22,6 +22,10 @@
 
 ![Rain2Risk brand sheet](docs/brand-sheet.png)
 
+![Rain2Risk demo](docs/demo.gif)
+
+*Recorded on the live site: pick a point on the map, run the screening, and read the score with its data-quality limits printed next to it.*
+
 ## The layers
 
 Every score is built from the live sources that respond — no invented values, ever.
