@@ -11,6 +11,7 @@ dropped from sys.modules before importing.
 """
 
 import json
+import math
 import sys
 from http.server import BaseHTTPRequestHandler
 from pathlib import Path
@@ -49,7 +50,8 @@ class handler(BaseHTTPRequestHandler):
             raw = self.rfile.read(length) if length > 0 else b"{}"
             body = json.loads(raw.decode("utf-8"))
             lat, lon = float(body["lat"]), float(body["lon"])
-            if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+            if not (math.isfinite(lat) and math.isfinite(lon)
+                    and -90 <= lat <= 90 and -180 <= lon <= 180):
                 raise ValueError("latitude or longitude is outside valid range")
             self._send_json(200, analyze(lat, lon))
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
