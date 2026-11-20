@@ -62,6 +62,20 @@ This is the core of the product, and of the brand:
 | `VERY HIGH` | `#C23B2E` | Very high relative risk |
 | `UNAVAILABLE` | `#8A938C` | Data missing — not a score |
 
+## Methodology
+
+The score is a **heuristic screening index, not a calibrated flood model**. It has never been fitted to recorded flood events, and it must not be read as a probability: a score of 80 does not mean an 80% chance of flooding. It compares places *relative to each other* so a planner can decide where to look closer.
+
+- Five factors, each normalized to 0–100, combined as a weighted mean (`backend/risk/thresholds.py`): **rainfall 40%, slope 20%, elevation 15%, built-up share 15%, distance to water 10%**.
+- Rainfall (mm) maps to its factor score by piecewise-linear interpolation: 0→0, 10→15, 25→35, 50→65, 75→85, 100→100.
+- Levels: below 25 `LOW`, below 50 `MODERATE`, below 75 `HIGH`, 75 and above `VERY HIGH`.
+- A missing layer is **excluded** and the weights renormalize over the available factors — missing data never counts as zero risk (see the honesty rule above).
+
+## Privacy & limits
+
+- The API does not store the coordinates you analyze; each score is computed per request and returned.
+- The public API has no built-in rate limiting yet. It is a small public demo — please use it gently.
+
 ## What was broken and how I fixed it
 
 An honest changelog of the repair pass (October 2026). Each fix has a regression test.
